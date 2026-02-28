@@ -1,6 +1,6 @@
-package br.com.centavo.dao;
+package br.com.centavo.repository;
 
-import br.com.centavo.model.User;
+import br.com.centavo.entity.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

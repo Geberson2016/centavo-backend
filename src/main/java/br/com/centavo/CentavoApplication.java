@@ -1,16 +1,16 @@
 package br.com.centavo;
 
-import br.com.centavo.dao.AccountDAO;
-import br.com.centavo.dao.CategoryDAO;
-import br.com.centavo.dao.TransactionDAO;
-import br.com.centavo.dao.UserDAO;
+import br.com.centavo.repository.AccountDAO;
+import br.com.centavo.repository.CategoryDAO;
+import br.com.centavo.repository.TransactionDAO;
+import br.com.centavo.repository.UserDAO;
 import br.com.centavo.enums.AccountType;
 import br.com.centavo.enums.BudgetType;
 import br.com.centavo.enums.TransactionType;
-import br.com.centavo.model.Account;
-import br.com.centavo.model.Category;
-import br.com.centavo.model.Transaction;
-import br.com.centavo.model.User;
+import br.com.centavo.entity.Account;
+import br.com.centavo.entity.Category;
+import br.com.centavo.entity.Transaction;
+import br.com.centavo.entity.User;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

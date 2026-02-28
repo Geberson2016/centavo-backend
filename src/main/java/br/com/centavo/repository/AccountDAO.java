@@ -1,7 +1,7 @@
-package br.com.centavo.dao;
+package br.com.centavo.repository;
 
 import br.com.centavo.enums.AccountType;
-import br.com.centavo.model.Account;
+import br.com.centavo.entity.Account;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

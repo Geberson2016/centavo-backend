@@ -1,4 +1,4 @@
-package br.com.centavo.model;
+package br.com.centavo.entity;
 
 import br.com.centavo.enums.TransactionType;
 

@@ -1,8 +1,8 @@
-package br.com.centavo.dao;
+package br.com.centavo.repository;
 
 import br.com.centavo.enums.BudgetType;
 import br.com.centavo.enums.TransactionType;
-import br.com.centavo.model.Category;
+import br.com.centavo.entity.Category;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
