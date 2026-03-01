@@ -5,6 +5,7 @@ import br.com.centavo.dto.AccountResponse;
 import br.com.centavo.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping
     public ResponseEntity<List<AccountResponse>> findAll() {
         return ResponseEntity.ok(accountService.findAll());
     }
