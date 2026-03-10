@@ -1,5 +1,7 @@
 package br.com.centavo.service;
 
+import br.com.centavo.dto.UserRequest;
+import br.com.centavo.dto.UserResponse;
 import br.com.centavo.entity.User;
 import br.com.centavo.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,24 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public UserResponse createUser(UserRequest request) {
+        User user = new User(
+              request.name()
+        );
+
+        User userSaved = userRepository.save(user);
+        return new UserResponse(
+                userSaved.getId(),
+                userSaved.getName()
+        );
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserResponse> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> new UserResponse(
+                        user.getId(),
+                        user.getName()
+                )).toList();
     }
 }

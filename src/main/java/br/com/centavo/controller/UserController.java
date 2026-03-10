@@ -1,7 +1,10 @@
 package br.com.centavo.controller;
 
-import br.com.centavo.entity.User;
+import br.com.centavo.dto.UserRequest;
+import br.com.centavo.dto.UserResponse;
 import br.com.centavo.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,14 +22,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public List<User> list() {
-        return userService.findAll();
-    }
-
     @PostMapping
-    public User create(@RequestBody User user) {
-        return userService.save(user);
+    public ResponseEntity<UserResponse> create(@RequestBody UserRequest user) {
+        UserResponse response = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> list() {
+        return ResponseEntity.ok(userService.findAll());
+    }
 }
