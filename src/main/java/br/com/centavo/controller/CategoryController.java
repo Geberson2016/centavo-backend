@@ -1,28 +1,28 @@
-//package br.com.centavo.controller;
-//
-//import br.com.centavo.repository.CategoryDAO;
-//import br.com.centavo.entity.Category;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@RestController
-//@RequestMapping("/categories")
-//public class CategoryController {
-//
-//    private final CategoryDAO categoryDAO;
-//
-//    public CategoryController(CategoryDAO categoryDAO) {
-//        this.categoryDAO = categoryDAO;
-//    }
-//
-//    @GetMapping
-//    public List<Category> getAllCategories() {
-//        return categoryDAO.findAll();
-//    }
-//
-//    @PostMapping
-//    public void createCategory(@RequestBody Category category) {
-//        categoryDAO.save(category);
-//    }
-//}
+package br.com.centavo.controller;
+
+
+import br.com.centavo.dto.CategoryRequest;
+import br.com.centavo.dto.CategoryResponse;
+import br.com.centavo.service.CategoryService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/categories")
+public class CategoryController {
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryResponse> create(@RequestBody CategoryRequest request) {
+        CategoryResponse  response = categoryService.createCategory(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+}
