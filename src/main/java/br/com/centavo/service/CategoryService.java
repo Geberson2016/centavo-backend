@@ -56,4 +56,17 @@ public class CategoryService {
                 .toList();
     }
 
+    public CategoryResponse findById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+        return new CategoryResponse(
+                category.getId(),
+                category.getName(),
+                category.getType(),
+                category.getUser().getId(),
+                category.getBudgetType()
+        );
+    }
+
 }
