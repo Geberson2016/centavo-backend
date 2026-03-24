@@ -42,8 +42,7 @@ public class Transaction {
 
     public Transaction(){}
 
-    public Transaction(Long id, String description, BigDecimal value, LocalDate date, TransactionType type, Account account, Category category) {
-        this.id = id;
+    public Transaction(String description, BigDecimal value, LocalDate date, TransactionType type, Account account, Category category) {
         this.description = description;
         this.value = value;
         this.date = date;

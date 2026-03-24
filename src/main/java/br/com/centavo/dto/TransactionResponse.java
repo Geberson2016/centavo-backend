@@ -10,8 +10,8 @@ public record TransactionResponse (
         String description,
         BigDecimal value,
         LocalDate date,
+        TransactionType type,
         Long accountId,
-        Long categoryId,
-        TransactionType type
+        Long categoryId
 ) {
 }
