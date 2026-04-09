@@ -1,5 +1,6 @@
 package br.com.centavo.service;
 
+import br.com.centavo.dto.CategoryResponse;
 import br.com.centavo.dto.TransactionRequest;
 import br.com.centavo.dto.TransactionResponse;
 import br.com.centavo.entity.Account;
@@ -11,6 +12,8 @@ import br.com.centavo.repository.CategoryRepository;
 import br.com.centavo.repository.TransactionRepository;
 import br.com.centavo.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -53,6 +56,36 @@ public class TransactionService {
                 savedTransaction.getType(),
                 savedTransaction.getAccount().getId(),
                 savedTransaction.getCategory().getId()
+        );
+    }
+
+    public List<TransactionResponse> findAll() {
+        return transactionRepository.findAll()
+                .stream()
+                .map(transaction -> new TransactionResponse(
+                        transaction.getId(),
+                        transaction.getDescription(),
+                        transaction.getValue(),
+                        transaction.getDate(),
+                        transaction.getType(),
+                        transaction.getAccount().getId(),
+                        transaction.getCategory().getId()
+                ))
+                .toList();
+    }
+
+    public TransactionResponse findById(Long id) {
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transacao não encontrada"));
+
+        return new TransactionResponse(
+                transaction.getId(),
+                transaction.getDescription(),
+                transaction.getValue(),
+                transaction.getDate(),
+                transaction.getType(),
+                transaction.getAccount().getId(),
+                transaction.getCategory().getId()
         );
     }
 
