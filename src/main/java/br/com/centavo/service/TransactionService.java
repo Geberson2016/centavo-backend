@@ -38,6 +38,11 @@ public class TransactionService {
         Category category = categoryRepository.findById(transactionRequest.categoryId())
                 .orElseThrow(()-> new RuntimeException("Conta não encontrada"));
 
+        if (category.getType() != transactionRequest.type()) {
+            throw new RuntimeException("O tipo da transação (" + transactionRequest.type() +
+                    ") é incompatível com o tipo da categoria " + category.getName() + " (" + category.getType() + ")");
+        }
+
         Transaction transaction = new Transaction(
                 transactionRequest.description(),
                 transactionRequest.value(),
