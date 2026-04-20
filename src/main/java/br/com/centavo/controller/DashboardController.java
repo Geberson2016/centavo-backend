@@ -3,10 +3,12 @@ package br.com.centavo.controller;
 import br.com.centavo.dto.DashboardSummaryResponse;
 import br.com.centavo.service.DashboardService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/v1/dashboard")
 public class DashboardController {
