@@ -1,8 +1,6 @@
 package br.com.centavo.dto;
 
-public record UserRequest(
-        String name,
+public record AuthRequest(
         String email,
-        String phone,
         String password
 ) {}
