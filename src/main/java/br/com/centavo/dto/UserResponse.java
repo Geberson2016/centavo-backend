@@ -1,6 +1,8 @@
 package br.com.centavo.dto;
 
-public record UserResponse (
+public record UserResponse(
         Long id,
-        String name
+        String name,
+        String email,
+        String token
 ) {}

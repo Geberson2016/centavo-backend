@@ -25,19 +25,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponse> create(@RequestBody UserRequest user) {
-        UserResponse response = userService.createUser(user);
+    @PostMapping("/register")
+    public ResponseEntity<UserResponse> register(@RequestBody UserRequest request) {
+        UserResponse response = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<UserResponse>> findAll() {
-        return ResponseEntity.ok(userService.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> findUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.findById(id));
     }
 }
