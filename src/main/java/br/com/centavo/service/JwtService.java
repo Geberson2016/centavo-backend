@@ -21,7 +21,7 @@ public class JwtService {
                 .withIssuer("centavo-api")
                 .withSubject(user.getEmail())
                 .withClaim("name", user.getName())
-                .withExpiresAt(Instant.now().plus(7, ChronoUnit.DAYS))
+                .withExpiresAt(Instant.now().plus(1, ChronoUnit.DAYS))
                 .sign(Algorithm.HMAC256(secret));
     }
 

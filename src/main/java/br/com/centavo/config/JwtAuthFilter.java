@@ -38,8 +38,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authHeader.substring(7); // remove "Bearer "
-        String email = jwtService.validateToken(token); // valida e extrai o email
+        String token = authHeader.substring(7);
+        String email = jwtService.validateToken(token);
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
