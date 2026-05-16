@@ -1,5 +1,6 @@
 package br.com.centavo.service;
 
+import br.com.centavo.dto.UserRegisterResponse;
 import br.com.centavo.dto.UserRequest;
 import br.com.centavo.dto.UserResponse;
 import br.com.centavo.entity.User;
@@ -12,17 +13,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
 
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
-                       JwtService jwtService) {
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
     }
 
-    public UserResponse createUser(UserRequest request) {
+    public UserRegisterResponse createUser(UserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new RuntimeException("E-mail já cadastrado");
         }
@@ -35,8 +33,7 @@ public class UserService {
         );
 
         User saved = userRepository.save(user);
-        String token = jwtService.generateToken(saved);
 
-        return new UserResponse(saved.getId(), saved.getName(), saved.getEmail(), token);
+        return new UserRegisterResponse(saved.getName());
     }
 }
