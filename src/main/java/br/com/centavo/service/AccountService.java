@@ -2,10 +2,12 @@ package br.com.centavo.service;
 
 import br.com.centavo.dto.AccountRequest;
 import br.com.centavo.dto.AccountResponse;
+import br.com.centavo.dto.AccountSummaryResponse;
 import br.com.centavo.entity.Account;
 import br.com.centavo.entity.User;
 import br.com.centavo.repository.AccountRepository;
 import br.com.centavo.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,6 +62,19 @@ public class AccountService {
                         account.getName(),
                         account.getType(),
                         account.getUser().getId()
+                ))
+                .toList();
+    }
+    public List<AccountSummaryResponse> findAccountsSummary() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return accountRepository.findAllWithTotal(user.getId())
+                .stream()
+                .map(p -> new AccountSummaryResponse(
+                        p.getAccountId(),
+                        p.getAccountName(),
+                        p.getAccountType(),
+                        p.getTotal()
                 ))
                 .toList();
     }

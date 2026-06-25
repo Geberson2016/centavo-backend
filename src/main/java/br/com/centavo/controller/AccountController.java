@@ -2,6 +2,7 @@ package br.com.centavo.controller;
 
 import br.com.centavo.dto.AccountRequest;
 import br.com.centavo.dto.AccountResponse;
+import br.com.centavo.dto.AccountSummaryResponse;
 import br.com.centavo.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +40,10 @@ public class AccountController {
     @GetMapping("/{id}")
     public ResponseEntity<AccountResponse> findAccountById(@PathVariable Long id) {
         return ResponseEntity.ok(accountService.findById(id));
+    }
+
+    @GetMapping("/accountSummary")
+    public ResponseEntity<List<AccountSummaryResponse>> getAccountSummary() {
+        return ResponseEntity.ok(accountService.findAccountsSummary());
     }
 }
