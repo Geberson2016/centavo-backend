@@ -6,5 +6,6 @@ public interface AccountSummaryProjection {
     Long getAccountId();
     String getAccountName();
     String getAccountType();
-    BigDecimal getTotal();
+    BigDecimal getTotalRevenue();
+    BigDecimal getTotalExpense();
 }

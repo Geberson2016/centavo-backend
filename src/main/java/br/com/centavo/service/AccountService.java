@@ -77,7 +77,8 @@ public class AccountService {
                         p.getAccountId(),
                         p.getAccountName(),
                         p.getAccountType(),
-                        p.getTotal()
+                        p.getTotalRevenue(),
+                        p.getTotalExpense()
                 ))
                 .toList();
     }
