@@ -7,5 +7,7 @@ public record DashboardSummaryResponse(
         BigDecimal creditCardBill,
         BigDecimal monthlySavings,
         BigDecimal totalExpense,
-        BigDecimal totalRevenue
+        BigDecimal totalRevenue,
+        BigDecimal scheduledRevenue,
+        BigDecimal scheduledExpense
 ) {}

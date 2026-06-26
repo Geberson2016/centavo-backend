@@ -24,15 +24,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.type = :type AND t.account.user.id = :userId")
     BigDecimal sumByType(@Param("type") TransactionType type, @Param("userId") Long userId);
 
-    @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.type = :type AND t.date >= :startDate AND t.account.user.id = :userId")
-    BigDecimal sumByTypeAndDateAfter(@Param("type") TransactionType type, @Param("startDate") LocalDate startDate, @Param("userId") Long userId);
-
-    @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.account.type = :accountType AND t.type = 'DESPESA' AND t.account.user.id = :userId")
-    BigDecimal sumExpensesByAccountType(@Param("accountType") AccountType accountType, @Param("userId") Long userId);
-
-    @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.account.type = :accountType AND t.type = 'DESPESA' AND t.account.user.id = :userId AND t.date >= :startDate")
-    BigDecimal sumExpensesByAccountTypeAndDateAfter(@Param("accountType") AccountType accountType, @Param("startDate") LocalDate startDate, @Param("userId") Long userId);
-
     @Query("""
         SELECT t.description AS description,
                t.category.name AS categoryName,
@@ -45,4 +36,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
         ORDER BY t.date DESC, t.id DESC
     """)
     List<RecentTransactionProjection> findRecentByUserId(@Param("userId") Long userId, @Param("startDate") LocalDate startDate);
+
+    @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.type = :type AND t.date >= :startDate AND t.date <= :endDate AND t.account.user.id = :userId")
+    BigDecimal sumByTypeAndDateBetween(@Param("type") TransactionType type, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("userId") Long userId);
+
+    @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.account.type = :accountType AND t.type = 'DESPESA' AND t.account.user.id = :userId AND t.date >= :startDate AND t.date <= :endDate")
+    BigDecimal sumExpensesByAccountTypeAndDateBetween(@Param("accountType") AccountType accountType, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("userId") Long userId);
+
+    @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.type = :type AND t.date > :endDate AND t.account.user.id = :userId")
+    BigDecimal sumScheduledByType(@Param("type") TransactionType type, @Param("endDate") LocalDate endDate, @Param("userId") Long userId);
 }
