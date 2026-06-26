@@ -1,6 +1,7 @@
 package br.com.centavo.controller;
 
 import br.com.centavo.dto.CategoryResponse;
+import br.com.centavo.dto.RecentTransactionResponse;
 import br.com.centavo.dto.TransactionRequest;
 import br.com.centavo.dto.TransactionResponse;
 import br.com.centavo.entity.Transaction;
@@ -41,5 +42,10 @@ public class TransactionController {
     @GetMapping("/{id}")
     public ResponseEntity<TransactionResponse> findTransactionById(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.findById(id));
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<RecentTransactionResponse>> findRecent() {
+        return ResponseEntity.ok(transactionService.findRecent());
     }
 }

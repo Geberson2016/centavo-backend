@@ -1,6 +1,6 @@
 package br.com.centavo.service;
 
-import br.com.centavo.dto.CategoryResponse;
+import br.com.centavo.dto.RecentTransactionResponse;
 import br.com.centavo.dto.TransactionRequest;
 import br.com.centavo.dto.TransactionResponse;
 import br.com.centavo.entity.Account;
@@ -10,9 +10,10 @@ import br.com.centavo.entity.User;
 import br.com.centavo.repository.AccountRepository;
 import br.com.centavo.repository.CategoryRepository;
 import br.com.centavo.repository.TransactionRepository;
-import br.com.centavo.repository.UserRepository;
+import br.com.centavo.util.AuthUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,23 +21,28 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
     private final CategoryRepository categoryRepository;
+    private final AuthUtils authUtils;
 
     public TransactionService(
             TransactionRepository transactionRepository,
             AccountRepository accountRepository,
-            CategoryRepository categoryRepository
+            CategoryRepository categoryRepository,
+            AuthUtils authUtils
     ) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
         this.categoryRepository = categoryRepository;
+        this.authUtils = authUtils;
     }
 
     public TransactionResponse createTransaction(TransactionRequest transactionRequest) {
-        Account account = accountRepository.findById(transactionRequest.accountId())
-                .orElseThrow(()-> new RuntimeException("Conta não encontrada"));
+        User user = authUtils.getAuthenticatedUser();
+
+        Account account = accountRepository.findByIdAndUserId(transactionRequest.accountId(), user.getId())
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
         Category category = categoryRepository.findById(transactionRequest.categoryId())
-                .orElseThrow(()-> new RuntimeException("Conta não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
         if (category.getType() != transactionRequest.type()) {
             throw new RuntimeException("O tipo da transação (" + transactionRequest.type() +
@@ -65,7 +71,9 @@ public class TransactionService {
     }
 
     public List<TransactionResponse> findAll() {
-        return transactionRepository.findAll()
+        User user = authUtils.getAuthenticatedUser();
+
+        return transactionRepository.findAllByAccountUserId(user.getId())
                 .stream()
                 .map(transaction -> new TransactionResponse(
                         transaction.getId(),
@@ -80,8 +88,10 @@ public class TransactionService {
     }
 
     public TransactionResponse findById(Long id) {
-        Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transacao não encontrada"));
+        User user = authUtils.getAuthenticatedUser();
+
+        Transaction transaction = transactionRepository.findByIdAndAccountUserId(id, user.getId())
+                .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
 
         return new TransactionResponse(
                 transaction.getId(),
@@ -94,4 +104,19 @@ public class TransactionService {
         );
     }
 
+    public List<RecentTransactionResponse> findRecent() {
+        User user = authUtils.getAuthenticatedUser();
+        LocalDate startDate = LocalDate.now().minusDays(30);
+
+        return transactionRepository.findRecentByUserId(user.getId(), startDate)
+                .stream()
+                .map(p -> new RecentTransactionResponse(
+                        p.getDescription(),
+                        p.getCategoryName(),
+                        p.getDate(),
+                        p.getValue(),
+                        p.getType()
+                ))
+                .toList();
+    }
 }
