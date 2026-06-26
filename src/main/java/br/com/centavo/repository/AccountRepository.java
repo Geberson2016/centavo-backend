@@ -7,8 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
+
+    List<Account> findAllByUserId(Long userId);
+
+    Optional<Account> findByIdAndUserId(Long id, Long userId);
 
     @Query("""
         SELECT a.id AS accountId,

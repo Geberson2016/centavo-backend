@@ -6,6 +6,7 @@ import br.com.centavo.entity.Category;
 import br.com.centavo.entity.User;
 import br.com.centavo.repository.CategoryRepository;
 import br.com.centavo.repository.UserRepository;
+import br.com.centavo.util.AuthUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,16 +14,16 @@ import java.util.List;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
+    private final AuthUtils authUtils;
 
-    public CategoryService(CategoryRepository categoryRepository, UserRepository userRepository) {
+    public CategoryService(CategoryRepository categoryRepository, AuthUtils authUtils) {
         this.categoryRepository = categoryRepository;
-        this. userRepository = userRepository;
+        this.authUtils = authUtils;
+
     }
 
     public CategoryResponse createCategory (CategoryRequest categoryRequest) {
-        User user = userRepository.findById(categoryRequest.userId())
-                .orElseThrow(()-> new RuntimeException("Usuário não encontrado"));
+        User user = authUtils.getAuthenticatedUser();
 
         Category category = new Category(
                 categoryRequest.name(),
@@ -44,7 +45,9 @@ public class CategoryService {
     }
 
     public List<CategoryResponse> findAll() {
-        return categoryRepository.findAll()
+        User user = authUtils.getAuthenticatedUser();
+
+        return categoryRepository.findAllByUserId(user.getId())
                 .stream()
                 .map(category -> new CategoryResponse(
                         category.getId(),
@@ -57,7 +60,9 @@ public class CategoryService {
     }
 
     public CategoryResponse findById(Long id) {
-        Category category = categoryRepository.findById(id)
+        User user = authUtils.getAuthenticatedUser();
+
+        Category category = categoryRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
         return new CategoryResponse(
