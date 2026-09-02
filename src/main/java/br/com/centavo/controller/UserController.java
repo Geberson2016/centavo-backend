@@ -6,6 +6,7 @@ import br.com.centavo.dto.UserRequest;
 import br.com.centavo.dto.UserResponse;
 import br.com.centavo.service.AuthService;
 import br.com.centavo.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,13 +26,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponse> register(@RequestBody UserRequest request) {
+    public ResponseEntity<UserRegisterResponse> register(@Valid @RequestBody UserRequest request) {
         UserRegisterResponse response = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody AuthRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

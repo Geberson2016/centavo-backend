@@ -2,10 +2,12 @@ package br.com.centavo.dto;
 
 import br.com.centavo.enums.BudgetType;
 import br.com.centavo.enums.TransactionType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record CategoryRequest(
-        String name,
-        TransactionType type,
+        @NotBlank String name,
+        @NotNull TransactionType type,
         Long userId,
-        BudgetType budgetType
+        @NotNull BudgetType budgetType
 ) {}

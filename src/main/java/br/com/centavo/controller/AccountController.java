@@ -4,6 +4,7 @@ import br.com.centavo.dto.AccountRequest;
 import br.com.centavo.dto.AccountResponse;
 import br.com.centavo.dto.AccountSummaryResponse;
 import br.com.centavo.service.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponse> create(@RequestBody AccountRequest request) {
+    public ResponseEntity<AccountResponse> create(@Valid @RequestBody AccountRequest request) {
         AccountResponse response = accountService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

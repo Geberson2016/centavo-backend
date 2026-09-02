@@ -6,6 +6,7 @@ import br.com.centavo.dto.TransactionRequest;
 import br.com.centavo.dto.TransactionResponse;
 import br.com.centavo.entity.Transaction;
 import br.com.centavo.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<TransactionResponse> create(@RequestBody TransactionRequest request) {
+    public ResponseEntity<TransactionResponse> create(@Valid @RequestBody TransactionRequest request) {
         TransactionResponse response = transactionService.createTransaction(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
