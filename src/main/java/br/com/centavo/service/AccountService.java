@@ -5,6 +5,8 @@ import br.com.centavo.dto.AccountResponse;
 import br.com.centavo.dto.AccountSummaryResponse;
 import br.com.centavo.entity.Account;
 import br.com.centavo.entity.User;
+import br.com.centavo.exception.ApiException;
+import br.com.centavo.exception.ErrorCode;
 import br.com.centavo.repository.AccountRepository;
 import br.com.centavo.util.AuthUtils;
 import org.springframework.stereotype.Service;
@@ -58,7 +60,7 @@ public class AccountService {
         User user = authUtils.getAuthenticatedUser();
 
         Account account = accountRepository.findByIdAndUserId(id, user.getId())
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+                .orElseThrow(() -> new ApiException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         return new AccountResponse(
                 account.getId(),

@@ -3,6 +3,8 @@ package br.com.centavo.service;
 import br.com.centavo.dto.AuthRequest;
 import br.com.centavo.dto.UserResponse;
 import br.com.centavo.entity.User;
+import br.com.centavo.exception.ApiException;
+import br.com.centavo.exception.ErrorCode;
 import br.com.centavo.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,10 @@ public class AuthService {
 
     public UserResponse login(AuthRequest request) {
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("E-mail ou senha inválidos"));
+                .orElseThrow(() -> new ApiException(ErrorCode.INVALID_CREDENTIALS));
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new RuntimeException("E-mail ou senha inválidos");
+            throw new ApiException(ErrorCode.INVALID_CREDENTIALS);
         }
 
         String token = jwtService.generateToken(user);

@@ -4,6 +4,8 @@ import br.com.centavo.dto.UserRegisterResponse;
 import br.com.centavo.dto.UserRequest;
 import br.com.centavo.dto.UserResponse;
 import br.com.centavo.entity.User;
+import br.com.centavo.exception.ApiException;
+import br.com.centavo.exception.ErrorCode;
 import br.com.centavo.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ public class UserService {
 
     public UserRegisterResponse createUser(UserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("E-mail já cadastrado");
+            throw new ApiException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
         User user = new User(

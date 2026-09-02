@@ -4,6 +4,8 @@ import br.com.centavo.dto.CategoryRequest;
 import br.com.centavo.dto.CategoryResponse;
 import br.com.centavo.entity.Category;
 import br.com.centavo.entity.User;
+import br.com.centavo.exception.ApiException;
+import br.com.centavo.exception.ErrorCode;
 import br.com.centavo.repository.CategoryRepository;
 import br.com.centavo.repository.UserRepository;
 import br.com.centavo.util.AuthUtils;
@@ -63,7 +65,7 @@ public class CategoryService {
         User user = authUtils.getAuthenticatedUser();
 
         Category category = categoryRepository.findByIdAndUserId(id, user.getId())
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+                .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_FOUND));
 
         return new CategoryResponse(
                 category.getId(),

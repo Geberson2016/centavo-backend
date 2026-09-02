@@ -7,6 +7,8 @@ import br.com.centavo.entity.Account;
 import br.com.centavo.entity.Category;
 import br.com.centavo.entity.Transaction;
 import br.com.centavo.entity.User;
+import br.com.centavo.exception.ApiException;
+import br.com.centavo.exception.ErrorCode;
 import br.com.centavo.repository.AccountRepository;
 import br.com.centavo.repository.CategoryRepository;
 import br.com.centavo.repository.TransactionRepository;
@@ -39,14 +41,13 @@ public class TransactionService {
         User user = authUtils.getAuthenticatedUser();
 
         Account account = accountRepository.findByIdAndUserId(transactionRequest.accountId(), user.getId())
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+                .orElseThrow(() -> new ApiException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         Category category = categoryRepository.findById(transactionRequest.categoryId())
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+                .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_FOUND));
 
         if (category.getType() != transactionRequest.type()) {
-            throw new RuntimeException("O tipo da transação (" + transactionRequest.type() +
-                    ") é incompatível com o tipo da categoria " + category.getName() + " (" + category.getType() + ")");
+            throw new ApiException(ErrorCode.TRANSACTION_CATEGORY_TYPE_MISMATCH);
         }
 
         Transaction transaction = new Transaction(
@@ -91,7 +92,7 @@ public class TransactionService {
         User user = authUtils.getAuthenticatedUser();
 
         Transaction transaction = transactionRepository.findByIdAndAccountUserId(id, user.getId())
-                .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
+                .orElseThrow(() -> new ApiException(ErrorCode.TRANSACTION_NOT_FOUND));
 
         return new TransactionResponse(
                 transaction.getId(),
