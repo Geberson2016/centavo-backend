@@ -19,8 +19,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     SELECT a.id AS accountId,
            a.name AS accountName,
            a.type AS accountType,
-           COALESCE(SUM(CASE WHEN t.type = 'RECEITA' THEN t.value ELSE 0 END), 0) AS totalRevenue,
-           COALESCE(SUM(CASE WHEN t.type = 'DESPESA' THEN t.value ELSE 0 END), 0) AS totalExpense
+           COALESCE(SUM(CASE WHEN t.type = 'INCOME' THEN t.value ELSE 0 END), 0) AS totalRevenue,
+           COALESCE(SUM(CASE WHEN t.type = 'EXPENSE' THEN t.value ELSE 0 END), 0) AS totalExpense
     FROM Account a
     LEFT JOIN a.transactions t
     WHERE a.user.id = :userId

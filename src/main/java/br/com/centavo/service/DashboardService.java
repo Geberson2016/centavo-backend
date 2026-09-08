@@ -27,17 +27,17 @@ public class DashboardService {
         LocalDate firstDayOfMonth = today.withDayOfMonth(1);
         LocalDate lastDayOfMonth = today.with(TemporalAdjusters.lastDayOfMonth());
 
-        BigDecimal allRevenue = nullToZero(transactionRepository.sumByType(TransactionType.RECEITA, userId));
-        BigDecimal allExpense = nullToZero(transactionRepository.sumByType(TransactionType.DESPESA, userId));
+        BigDecimal allRevenue = nullToZero(transactionRepository.sumByType(TransactionType.INCOME, userId));
+        BigDecimal allExpense = nullToZero(transactionRepository.sumByType(TransactionType.EXPENSE, userId));
         BigDecimal totalBalance = allRevenue.subtract(allExpense);
 
-        BigDecimal totalRevenue = nullToZero(transactionRepository.sumByTypeAndDateBetween(TransactionType.RECEITA, firstDayOfMonth, lastDayOfMonth, userId));
-        BigDecimal totalExpense = nullToZero(transactionRepository.sumByTypeAndDateBetween(TransactionType.DESPESA, firstDayOfMonth, lastDayOfMonth, userId));
-        BigDecimal creditCardBill = nullToZero(transactionRepository.sumExpensesByAccountTypeAndDateBetween(AccountType.CARTAO_CREDITO, firstDayOfMonth, lastDayOfMonth, userId));
+        BigDecimal totalRevenue = nullToZero(transactionRepository.sumByTypeAndDateBetween(TransactionType.INCOME, firstDayOfMonth, lastDayOfMonth, userId));
+        BigDecimal totalExpense = nullToZero(transactionRepository.sumByTypeAndDateBetween(TransactionType.EXPENSE, firstDayOfMonth, lastDayOfMonth, userId));
+        BigDecimal creditCardBill = nullToZero(transactionRepository.sumExpensesByAccountTypeAndDateBetween(AccountType.CREDIT_CARD, firstDayOfMonth, lastDayOfMonth, userId));
         BigDecimal monthlySavings = totalRevenue.subtract(totalExpense);
 
-        BigDecimal scheduledRevenue = nullToZero(transactionRepository.sumScheduledByType(TransactionType.RECEITA, lastDayOfMonth, userId));
-        BigDecimal scheduledExpense = nullToZero(transactionRepository.sumScheduledByType(TransactionType.DESPESA, lastDayOfMonth, userId));
+        BigDecimal scheduledRevenue = nullToZero(transactionRepository.sumScheduledByType(TransactionType.INCOME, lastDayOfMonth, userId));
+        BigDecimal scheduledExpense = nullToZero(transactionRepository.sumScheduledByType(TransactionType.EXPENSE, lastDayOfMonth, userId));
 
         return new DashboardSummaryResponse(
                 totalBalance, creditCardBill, monthlySavings,

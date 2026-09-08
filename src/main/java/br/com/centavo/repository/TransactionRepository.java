@@ -40,7 +40,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.type = :type AND t.date >= :startDate AND t.date <= :endDate AND t.account.user.id = :userId")
     BigDecimal sumByTypeAndDateBetween(@Param("type") TransactionType type, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("userId") Long userId);
 
-    @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.account.type = :accountType AND t.type = 'DESPESA' AND t.account.user.id = :userId AND t.date >= :startDate AND t.date <= :endDate")
+    @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.account.type = :accountType AND t.type = 'EXPENSE' AND t.account.user.id = :userId AND t.date >= :startDate AND t.date <= :endDate")
     BigDecimal sumExpensesByAccountTypeAndDateBetween(@Param("accountType") AccountType accountType, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("userId") Long userId);
 
     @Query("SELECT SUM(t.value) FROM Transaction t WHERE t.type = :type AND t.date > :endDate AND t.account.user.id = :userId")
