@@ -1,22 +1,19 @@
 package br.com.centavo.controller;
 
+import br.com.centavo.api.UsersApi;
 import br.com.centavo.dto.AuthRequest;
 import br.com.centavo.dto.UserRegisterResponse;
 import br.com.centavo.dto.UserRequest;
 import br.com.centavo.dto.UserResponse;
 import br.com.centavo.service.AuthService;
 import br.com.centavo.service.UserService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// Paths, validação e content types vêm da interface gerada a partir do openapi.yaml.
 @RestController
-@RequestMapping("/api/v1/users")
-public class UserController {
+public class UserController implements UsersApi {
     private final UserService userService;
     private final AuthService authService;
 
@@ -25,14 +22,14 @@ public class UserController {
         this.authService = authService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponse> register(@Valid @RequestBody UserRequest request) {
+    @Override
+    public ResponseEntity<UserRegisterResponse> register(UserRequest request) {
         UserRegisterResponse response = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody AuthRequest request) {
+    @Override
+    public ResponseEntity<UserResponse> login(AuthRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

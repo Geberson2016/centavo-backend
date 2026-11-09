@@ -1,47 +1,42 @@
 package br.com.centavo.controller;
 
+import br.com.centavo.api.AccountsApi;
 import br.com.centavo.dto.AccountRequest;
 import br.com.centavo.dto.AccountResponse;
 import br.com.centavo.dto.AccountSummaryResponse;
 import br.com.centavo.service.AccountService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// Paths, validação e content types vêm da interface gerada a partir do openapi.yaml.
 @RestController
-@RequestMapping("/api/v1/accounts")
-public class AccountController {
+public class AccountController implements AccountsApi {
     private final AccountService accountService;
 
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
-    @PostMapping
-    public ResponseEntity<AccountResponse> create(@Valid @RequestBody AccountRequest request) {
+    @Override
+    public ResponseEntity<AccountResponse> createAccount(AccountRequest request) {
         AccountResponse response = accountService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping
-    public ResponseEntity<List<AccountResponse>> findAll() {
+    @Override
+    public ResponseEntity<List<AccountResponse>> listAccounts() {
         return ResponseEntity.ok(accountService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AccountResponse> findAccountById(@PathVariable Long id) {
+    @Override
+    public ResponseEntity<AccountResponse> getAccount(Long id) {
         return ResponseEntity.ok(accountService.findById(id));
     }
 
-    @GetMapping("/accountSummary")
+    @Override
     public ResponseEntity<List<AccountSummaryResponse>> getAccountSummary() {
         return ResponseEntity.ok(accountService.findAccountsSummary());
     }

@@ -55,3 +55,9 @@ Fluxo clássico em camadas — `controller → service → repository → entity
 ## Layout de pacotes
 
 `br.com.centavo` → `controller/`, `service/`, `repository/`, `entity/`, `dto/`, `enums/`, `config/`, `util/`. Todos os endpoints ficam sob `/api/v1`.
+
+## Contrato OpenAPI
+
+- O contrato vive em `src/main/resources/openapi.yaml`. Endpoint novo ou alterado começa **por ele**.
+- No `generate-sources`, o `openapi-generator-maven-plugin` gera as interfaces `br.com.centavo.api.*Api` em `target/generated-sources/openapi` (não versionadas). Os controllers só implementam essas interfaces: paths, `@Valid` e content types vêm delas, então não use `@RequestMapping`/`@GetMapping` nos controllers.
+- Os schemas do spec são mapeados (`schemaMappings` no `pom.xml`) para os records de `dto/` e os enums de `enums/`, e não geram models. Schema novo exige um `schemaMapping` novo e um record que bata com o spec.

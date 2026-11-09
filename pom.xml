@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<openapi-generator.version>7.10.0</openapi-generator.version>
 	</properties>
 	<dependencies>
         <dependency>
@@ -90,6 +91,61 @@
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
+			</plugin>
+			<!-- Contract-first (AGENTS.md §1.3): gera as interfaces dos controllers a partir do
+			     openapi.yaml. Os schemas são mapeados para os records/enums existentes em vez de
+			     gerar models, então os DTOs continuam sendo records imutáveis. -->
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>${openapi-generator.version}</version>
+				<executions>
+					<execution>
+						<id>generate-server-api</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>br.com.centavo.api</apiPackage>
+							<generateApiTests>false</generateApiTests>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateModels>false</generateModels>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<schemaMappings>
+								<schemaMapping>TransactionType=br.com.centavo.enums.TransactionType</schemaMapping>
+								<schemaMapping>AccountType=br.com.centavo.enums.AccountType</schemaMapping>
+								<schemaMapping>BudgetType=br.com.centavo.enums.BudgetType</schemaMapping>
+								<schemaMapping>UserRequest=br.com.centavo.dto.UserRequest</schemaMapping>
+								<schemaMapping>UserRegisterResponse=br.com.centavo.dto.UserRegisterResponse</schemaMapping>
+								<schemaMapping>AuthRequest=br.com.centavo.dto.AuthRequest</schemaMapping>
+								<schemaMapping>UserResponse=br.com.centavo.dto.UserResponse</schemaMapping>
+								<schemaMapping>AccountRequest=br.com.centavo.dto.AccountRequest</schemaMapping>
+								<schemaMapping>AccountResponse=br.com.centavo.dto.AccountResponse</schemaMapping>
+								<schemaMapping>AccountSummaryResponse=br.com.centavo.dto.AccountSummaryResponse</schemaMapping>
+								<schemaMapping>CategoryRequest=br.com.centavo.dto.CategoryRequest</schemaMapping>
+								<schemaMapping>CategoryResponse=br.com.centavo.dto.CategoryResponse</schemaMapping>
+								<schemaMapping>TransactionRequest=br.com.centavo.dto.TransactionRequest</schemaMapping>
+								<schemaMapping>TransactionResponse=br.com.centavo.dto.TransactionResponse</schemaMapping>
+								<schemaMapping>RecentTransactionResponse=br.com.centavo.dto.RecentTransactionResponse</schemaMapping>
+								<schemaMapping>DashboardSummaryResponse=br.com.centavo.dto.DashboardSummaryResponse</schemaMapping>
+								<schemaMapping>Problem=org.springframework.http.ProblemDetail</schemaMapping>
+							</schemaMappings>
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>
+								<skipDefaultInterface>true</skipDefaultInterface>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useTags>true</useTags>
+								<useBeanValidation>true</useBeanValidation>
+								<openApiNullable>false</openApiNullable>
+								<documentationProvider>none</documentationProvider>
+								<annotationLibrary>none</annotationLibrary>
+								<sourceFolder>src/main/java</sourceFolder>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
