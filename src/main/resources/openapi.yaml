@@ -270,7 +270,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
-          description: Conta ou categoria inexistente (`ACCOUNT_NOT_FOUND`, `CATEGORY_NOT_FOUND`)
+          description: Conta ou categoria inexistente ou de outro usuário (`ACCOUNT_NOT_FOUND`, `CATEGORY_NOT_FOUND`)
           content:
             application/problem+json:
               schema:

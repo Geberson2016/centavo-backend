@@ -43,7 +43,7 @@ public class TransactionService {
         Account account = accountRepository.findByIdAndUserId(transactionRequest.accountId(), user.getId())
                 .orElseThrow(() -> new ApiException(ErrorCode.ACCOUNT_NOT_FOUND));
 
-        Category category = categoryRepository.findById(transactionRequest.categoryId())
+        Category category = categoryRepository.findByIdAndUserId(transactionRequest.categoryId(), user.getId())
                 .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_FOUND));
 
         if (category.getType() != transactionRequest.type()) {
