@@ -40,7 +40,7 @@ Requer JDK 21. Config de banco em `src/main/resources/application.properties`.
 - **`controller/`**: fatia web com `@WebMvcTest`, herdando de `ControllerTestSupport`, que importa o `SecurityConfig` **real** (rotas públicas, 403 sem token) e o matcher `problem(status, code)` para RFC 7807.
 - **`repository/`**: `@RepositoryTest` (`@DataJpaTest` contra Postgres do Testcontainers). O schema vem das migrações do Flyway e é validado pelo Hibernate.
 - **`ApiIntegrationTest`**: a pilha inteira (JWT real → Postgres), incluindo o isolamento entre usuários.
-- O Testcontainers precisa de **Docker**. Nenhum teste usa o banco de dev nem o `application.properties`: o perfil `test` (`src/test/resources/application-test.properties`) é autossuficiente.
+- O Testcontainers precisa de **Docker**. Nenhum teste usa o banco de dev: o perfil `test` (`src/test/resources/application-test.properties`) traz o segredo do JWT e o resto do que os testes precisam.
 - Sem JDK 21 na máquina, rode num container com acesso ao Docker:
 
 ```bash
@@ -59,13 +59,8 @@ Fluxo clássico em camadas — `controller → service → repository → entity
 - **O mapeamento de DTO é manual** dentro dos services (entity → `*Response`), e endpoints de leitura pesada usam tipos de interface `*Projection`.
 - **Entidades**: `User`, `Account`, `Category`, `Transaction` (`@ManyToOne` para Account + Category; `value` é `BigDecimal(19,2)`; `type` é um enum `@Enumerated(STRING)`).
 
-### Problemas conhecidos a corrigir (rastreados no AGENTS.md)
-- Enums/mensagens em português vazando para o contrato do FE (tabela PT→EN em `AGENTS.md §4`).
-- `RuntimeException` cru em vez de exceptions tipadas + handler global.
-- Segredo do JWT + credenciais de banco hardcoded no `application.properties`.
-- `schema.sql` divergiu das entidades + `ddl-auto=update` → migrar para Flyway (`validate`).
-- `data-jpa` e `data-jdbc` juntos no classpath → manter só JPA.
-- `@CrossOrigin` por controller duplicando o CORS do `SecurityConfig` → centralizar.
+### Problemas conhecidos
+- Sem token (ou com token inválido) a API responde **403 sem corpo**, não 401. O BFF traduz para `401 UNAUTHENTICATED`; mudar aqui exige mudar o BFF junto.
 
 ## Layout de pacotes
 

@@ -41,8 +41,7 @@ Identificadores, enums, tabelas/colunas de banco e chaves de configuração fica
 - **OCP/ISP/LSP** — interfaces pequenas e focadas; DTOs como `record`s imutáveis; estenda via novos tipos, não via `if/else` espalhado.
 
 ### 1.5 Sem segredos no código-fonte
-Segredo do JWT e credenciais de banco devem vir de variáveis de ambiente / config do Spring, não de literais no `application.properties`. Forneça um `application-example.properties` (ou `.env.example`); mantenha valores reais fora do git.
-> Violações atuais: `api.security.token.secret=chave-super-secreta-12345` e `spring.datasource.username/password=admin` estão hardcoded.
+Segredo do JWT e credenciais de banco vêm de variáveis de ambiente, nunca de literais. O `application.properties` é versionado justamente por só conter referências `${VAR}`: o segredo do JWT não tem default, e os valores reais ficam no `.env` do compose (repositório `centavo-infra`, fora do git).
 
 ### 1.6 Validação na borda
 DTOs de request usam constraints do `jakarta.validation` (`@NotNull`, `@Email`, `@Positive`, …) e os controllers usam `@Valid`. Nunca confie no client. Dinheiro é `BigDecimal` (já correto) — nunca `double`/`float`.
@@ -136,7 +135,7 @@ Notas de migração: acompanhe o rename dos enums com um `UPDATE` no Flyway sobr
 - **Tratamento global de erro** — `@RestControllerAdvice` + exceptions tipadas + RFC 7807 (substitui o `RuntimeException` cru).
 - **OpenAPI contract-first** — escrever o `openapi.yaml`, gerar interfaces do servidor + client TS.
 - **Migrações Flyway** + `ddl-auto=validate`; aposentar o `schema.sql` que diverge.
-- **Externalizar segredos** — segredo do JWT e credenciais do datasource via env; `application-example.properties`.
+- **Externalizar segredos** — segredo do JWT e credenciais do datasource via env; `application.properties` só com `${VAR}`.
 - **Bean validation** em todos os DTOs de request.
 - **Remover o starter de persistência duplicado** (manter JPA) e os `@CrossOrigin` por controller.
 

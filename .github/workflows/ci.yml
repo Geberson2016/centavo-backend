@@ -1,7 +1,7 @@
 # Pipeline do backend: compila (gerando as interfaces a partir do openapi.yaml) e roda
 # todos os testes, inclusive os de repository e de integração, que sobem Postgres pelo
-# Testcontainers (o runner do GitHub já tem Docker). Não depende do application.properties,
-# que fica fora do git: os testes usam o perfil "test".
+# Testcontainers (o runner do GitHub já tem Docker). Os testes usam o perfil "test", então
+# o CI não precisa de JWT_SECRET nem de banco configurado.
 name: CI
 
 on:
