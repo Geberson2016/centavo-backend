@@ -13,6 +13,7 @@ Este arquivo orienta o Claude Code (claude.ai/code) ao trabalhar neste repositó
 4. **Sem segredos no código** — segredo do JWT e credenciais de banco via env, não literais.
 5. **Bean validation** (`@Valid`) nos DTOs de request; dinheiro continua `BigDecimal`.
 6. **Migrações Flyway**; `ddl-auto=validate`, nunca `update`.
+7. **Fluxo no GitHub** — nada direto na `main`: issue → branch → PR, e quem faz o merge é o Geberson (ver `AGENTS.md §0.1` e `../docs/processo/fluxo-de-trabalho.md`).
 
 O Definition of Done e a justificativa completa estão no `AGENTS.md`.
 
