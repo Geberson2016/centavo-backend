@@ -34,6 +34,21 @@ Stack: Spring Boot 3.4.5, Java 21, Spring Security (JWT stateless via `com.auth0
 
 Requer JDK 21. Config de banco em `src/main/resources/application.properties`.
 
+## Testes
+
+- **`service/`**: unidade com JUnit 5 + Mockito (sem Spring). `support/Fixtures` cria entidades com id e tem o `assertApiError`.
+- **`controller/`**: fatia web com `@WebMvcTest`, herdando de `ControllerTestSupport`, que importa o `SecurityConfig` **real** (rotas públicas, 403 sem token) e o matcher `problem(status, code)` para RFC 7807.
+- **`repository/`**: `@RepositoryTest` (`@DataJpaTest` contra Postgres do Testcontainers). O schema vem das migrações do Flyway e é validado pelo Hibernate.
+- **`ApiIntegrationTest`**: a pilha inteira (JWT real → Postgres), incluindo o isolamento entre usuários.
+- O Testcontainers precisa de **Docker**. Nenhum teste usa o banco de dev nem o `application.properties`: o perfil `test` (`src/test/resources/application-test.properties`) é autossuficiente.
+- Sem JDK 21 na máquina, rode num container com acesso ao Docker:
+
+```bash
+docker run --rm --network host -v /var/run/docker.sock:/var/run/docker.sock \
+  -v "$PWD":/app -w /app -v centavo_centavo-m2:/root/.m2 \
+  -e TESTCONTAINERS_HOST_OVERRIDE=localhost maven:3.9-eclipse-temurin-21 mvn -B verify
+```
+
 ## Arquitetura
 
 Fluxo clássico em camadas — `controller → service → repository → entity`, DTOs como `record`s imutáveis (`*Request`, `*Response`, `*Projection`), injeção por construtor em tudo.
